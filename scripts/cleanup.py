@@ -35,7 +35,7 @@ def main():
         with open(args.input, 'r', encoding='utf-8') as f:
             for line in f:
                 line = line.strip()
-                if not line or line.startswith('#'):
+                if not line or line.startswith('#') or line.startswith('!'):
                     continue
 
                 domain = clean_domain(line)
