@@ -1,0 +1,40 @@
+name: Convert to domain-only
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - '.github/workflows/*.yaml'
+      - 'build.sh'
+      - 'scripts/cleanup.py'
+
+permissions:
+  contents: write
+
+jobs:
+
+  convert:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v6
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: "3.x"
+    - name: Run build.sh
+      run: |
+        bash build.sh
+    - name: Commit and push changes
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add .
+        git commit -m "Periodic update"
+        git push
+
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
